@@ -53,9 +53,10 @@ class ResUser(models.Model):
             'timestamp': fields.Datetime.now(),
             'user_id': self.id,
             'login': self.login,
+            'attributes': attributes,
         }
 
-    def _check_credentials(self, token):
+    def _check_credentials(self, password):
         """Override to handle SAML auths."""
         credentials = request.session.get('saml_credentials')
         if credentials:
@@ -65,15 +66,20 @@ class ResUser(models.Model):
             raise AccessDenied("SAML authentication required.")
         else:
             # Regular login
-            super(ResUser, self)._check_credentials(token)
+            super(ResUser, self)._check_credentials(password)
     
     @api.multi
     def _check_saml_credentials(self, credentials):
         timestamp = credentials.get('timestamp')
         user_id = credentials.get('user_id')
         dt = fields.Datetime.now() - fields.Datetime.from_string(timestamp)
+        # At this point we are already authenticated through SAML. Check the authentication timestamp in session.
+        # This should happen right after authentication, but I added the timeout just in case
+        # there's some unexpected wait times.
         if dt.seconds > int(config.get('saml_timeout', '60')):
             raise AccessDenied("SAML authentication timed out.")
+        # Isn't this more correct?
+        #if user_id != self.id:
         if user_id != self.env.user.id:
             raise AccessDenied("SAML authentication user missmatch.")
 
