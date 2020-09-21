@@ -46,7 +46,7 @@ class ResUser(models.Model):
                          'SAML UID must be unique per provider')]
 
     @api.multi
-    def get_saml_data(self, server):
+    def get_saml_data(self, provider, server):
         attributes = server.get_attributes()
         nameId = server.get_nameid()
         return {

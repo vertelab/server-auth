@@ -16,11 +16,10 @@
     'version': '12.0.1.0.0',
     'depends': [
         'base',
-        'auth_saml'
+        'auth_saml_ol'
     ],
     'data': [
         'security/ir.model.access.csv',
         'views/auth_saml.xml',
-        'data/auth_saml_groups.xml',
     ],
 }

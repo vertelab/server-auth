@@ -157,6 +157,7 @@ class AuthSamlProvider(models.Model):
         request_id = request.session.get('saml_request_id')
         server.process_response(request_id=request_id)
         errors = server.get_errors()
+        _logger.debug('SAML attributes: %s SAML errors: %s' % (server.get_attributes(), errors))
         if not server.is_authenticated():
             _logger.debug("SAML authentication invalid.")
             raise AccessDenied("SAML authentication invalid.")
@@ -167,7 +168,7 @@ class AuthSamlProvider(models.Model):
             if not user:
                 _logger.debug('No user found for SAML request')
                 raise AccessDenied('No user found for SAML request')
-            return user.get_saml_data(server)
+            return user.get_saml_data(self, server)
         _logger.debug("SAML errors: %s" % ', '.join(errors))
         raise AccessDenied("SAML errors.")
     
@@ -177,5 +178,9 @@ class AuthSamlProvider(models.Model):
             uid = server.get_nameid()
         else:
             uid = server.get_attribute(self.matching_attribute)
-        return self.env['res.users'].search([('saml_provider_id', '=', self.id), ('saml_uid', '=', uid)])
+        # Why? I didn't need this before.
+        if type(uid) == list:
+            uid = uid[0]
+        _logger.debug(uid)
+        return self.env['res.users'].sudo().search([('saml_provider_id', '=', self.id), ('saml_uid', '=', uid)])
 

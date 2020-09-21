@@ -19,7 +19,6 @@ from odoo.addons.web.controllers.main import Home
 
 _logger = logging.getLogger(__name__)
 
-
 # ----------------------------------------------------------
 # helpers
 # ----------------------------------------------------------
@@ -144,13 +143,13 @@ class AuthSAMLController(http.Controller):
         return redirect
 
     @http.route('/auth_saml/signin', type='http', auth='none', csrf=False)
-    # ~ @fragment_to_query_string
     def signin(self, **kw):
         """client obtained a saml token and passed it back
         to us... we need to validate it
         """
         if kw.get('RelayState') is None:
             # here we are in front of a client that went through
+            
             # some routes that "lost" its relaystate... this can happen
             # if the client visited his IDP and successfully logged in
             # then the IDP gave him a portal with his available applications

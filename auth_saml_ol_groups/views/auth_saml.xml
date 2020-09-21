@@ -3,7 +3,7 @@
     <record model="ir.ui.view" id="view_saml_provider_form_inherit">
         <field name="name">auth.saml.provider.form.inherit</field>
         <field name="model">auth.saml.provider</field>
-        <field name="inherit_id" ref="auth_saml.view_saml_provider_form"/>
+        <field name="inherit_id" ref="auth_saml_ol.view_saml_provider_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='sp_pkey']/.." position="after">
                 <group string="Map User Groups" >
@@ -15,6 +15,7 @@
                             <field name="operator" />
                             <field name="value" />
                             <field name="group_id" />
+                            <field name="autoremove" />
                         </tree>
                     </field>
               </group>
