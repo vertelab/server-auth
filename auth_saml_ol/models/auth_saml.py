@@ -181,6 +181,6 @@ class AuthSamlProvider(models.Model):
         # Why? I didn't need this before.
         if type(uid) == list:
             uid = uid[0]
-        _logger.warn(uid)
+        _logger.debug(uid)
         return self.env['res.users'].sudo().search([('saml_provider_id', '=', self.id), ('saml_uid', '=', uid)])
 

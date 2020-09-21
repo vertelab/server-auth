@@ -17,7 +17,6 @@ class AuthSamlProviderOperator(models.AbstractModel):
         values = attrs.get(mapping.saml_attribute)
         if values:
             for value in values:
-                #  Does this level even exist in the reply?
                 if mapping.value in value:
                     return True
         return False

@@ -167,8 +167,7 @@ class AuthSAMLController(http.Controller):
         redirect_url = state.get('r')
         registry = registry_get(dbname)
         with registry.cursor() as cr:
-            #try:
-            if True:
+            try:
                 env = api.Environment(cr, SUPERUSER_ID, context)
                 provider = env['auth.saml.provider'].browse(provider_id)
                 credentials = provider.authenticate(request, kw)
@@ -176,8 +175,6 @@ class AuthSAMLController(http.Controller):
                 _logger.debug(credentials)
                 res = login_and_redirect(dbname, credentials['login'], 'foobar', redirect_url=redirect_url)
                 return res
-            try:
-                pass
             except AttributeError as e:
                 # auth_signup is not installed
                 _logger.error("auth_signup not installed on database "
