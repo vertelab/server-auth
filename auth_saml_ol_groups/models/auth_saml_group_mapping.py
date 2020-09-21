@@ -46,3 +46,8 @@ class AuthSamlProviderGroupMapping(models.Model):
         help='The Odoo group to assign',
         required=True
     )
+    autoremove = fields.Boolean(
+        'Autoremove',
+        help="Autoremove this group from user on login, if it's not set in SAML data.",
+        default=True
+    )

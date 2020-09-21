@@ -1,7 +1,7 @@
 # © 2019 Savoir-faire Linux
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
-from odoo import fields, models, api
+from odoo import fields, models, api, _
 
 import logging
 
@@ -9,7 +9,7 @@ _logger = logging.getLogger(__name__)
 
 
 class AuthSamlProvider(models.Model):
-    _inherit = ['auth.saml.provider']
+    _inherit = 'auth.saml.provider'
 
     group_mapping_ids = fields.One2many(
         'auth.saml.provider.group_mapping',
@@ -28,9 +28,10 @@ class AuthSamlProvider(models.Model):
     )
 
     @api.multi
-    def _get_user_groups(self, user_id, attrs):
+    def _get_user_groups(self, user, server):
         groups = []
-        user = self.env['res.users'].browse(user_id)
+        to_remove = set()
+        attrs = server.get_attributes()
 
         if self.only_saml_groups:
             _logger.debug('deleting all groups from user %d', user_id)
@@ -45,7 +46,8 @@ class AuthSamlProvider(models.Model):
                     'adding user %d to group %s', user, mapping.group_id.name,
                 )
                 groups.append((4, mapping.group_id.id, False))
-
-        user.write({
-            'groups_id': groups
-        })
+            elif mapping.autoremove and (mapping.group_id in user.groups_id):
+                to_remove.add(mapping.group_id.id)
+        for group_id in to_remove:
+            groups.append((3, group_id))
+        return groups

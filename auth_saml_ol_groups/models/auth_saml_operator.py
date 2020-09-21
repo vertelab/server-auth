@@ -14,19 +14,18 @@ class AuthSamlProviderOperator(models.AbstractModel):
         return ('contains', 'equals')
 
     def contains(self, attrs, mapping):
-        matching_value = ''
-        for k in attrs:
-            if isinstance(k, tuple) and mapping.saml_attribute in k:
-                for matching_value in attrs[k]:
-                    if mapping.value in matching_value:
-                        return True
+        values = attrs.get(mapping.saml_attribute)
+        if values:
+            for value in values:
+                #  Does this level even exist in the reply?
+                if mapping.value in value:
+                    return True
         return False
 
     def equals(self, attrs, mapping):
-        matching_value = ''
-        for k in attrs:
-            if isinstance(k, tuple) and mapping.saml_attribute in k:
-                for matching_value in attrs[k]:
-                    if mapping.value == matching_value:
-                        return True
+        values = attrs.get(mapping.saml_attribute)
+        if values:
+            for value in values:
+                if mapping.value == value:
+                    return True
         return False
