@@ -59,7 +59,7 @@ class ResUser(models.Model):
     def _check_credentials(self, password):
         """Override to handle SAML auths."""
         credentials = request.session.get('saml_credentials')
-        _logger.debug('_check_credentials: %s' credentials)
+        _logger.debug('_check_credentials: %s' % credentials)
         if credentials:
             # SAML login
             self._check_saml_credentials(credentials)
