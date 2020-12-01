@@ -137,7 +137,7 @@ class AuthSAMLController(http.Controller):
             _logger.exception("SAML2 failure")
 
         # TODO: handle case when auth_request comes back as None
-
+        _logger.debug('/auth_saml/get_auth_request: redirect %s, relayState: %s' % (auth_request, state))
         redirect = werkzeug.utils.redirect(auth_request, 303)
         redirect.autocorrect_location_header = True
         return redirect
@@ -147,6 +147,7 @@ class AuthSAMLController(http.Controller):
         """client obtained a saml token and passed it back
         to us... we need to validate it
         """
+        _logger.debug('/auth_saml/signin: %s' % kw)
         if kw.get('RelayState') is None:
             # here we are in front of a client that went through
             
