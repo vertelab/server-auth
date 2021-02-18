@@ -139,6 +139,7 @@ class AuthSamlProvider(models.Model):
         settings = self._get_settings_for_provider()
         # req is used to build return URL (sent as RelayState), or provide response data.
         req = request and self._prepare_onelogin_request(request, post)
+        _logger.debug('req: %s settings: %s' % (req, settings))
         return OneLogin_Saml2_Auth(req, settings)
     
     @api.multi
@@ -157,7 +158,7 @@ class AuthSamlProvider(models.Model):
         request_id = request.session.get('saml_request_id')
         server.process_response(request_id=request_id)
         errors = server.get_errors()
-        _logger.debug('SAML attributes: %s SAML errors: %s' % (server.get_attributes(), errors))
+        _logger.debug('SAML attributes: %s SAML errors: %s request_id: %s' % (server.get_attributes(), errors, request_id))
         if not server.is_authenticated():
             _logger.debug("SAML authentication invalid.")
             raise AccessDenied("SAML authentication invalid.")

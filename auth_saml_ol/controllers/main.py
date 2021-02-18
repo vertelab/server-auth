@@ -162,6 +162,7 @@ class AuthSAMLController(http.Controller):
 
         state = simplejson.loads(kw['RelayState'])
         _logger.debug(state)
+        provider = None
         provider_id = state['p']
         dbname = state['d']
         context = state.get('c', {})
@@ -180,6 +181,8 @@ class AuthSAMLController(http.Controller):
                 # auth_signup is not installed
                 _logger.error("auth_signup not installed on database "
                               "saml sign up cancelled.")
+                if provider and provider.debug:
+                    _logger.exception("Something went wrong in SAML login.")
                 url = "/#action=login&saml_error=no-signup"
 
             except odoo.exceptions.AccessDenied:
@@ -188,6 +191,8 @@ class AuthSAMLController(http.Controller):
                 _logger.info('SAML2: access denied, redirect to main page '
                              'in case a valid session exists, '
                              'without setting cookies')
+                if provider and provider.debug:
+                    _logger.exception("Something went wrong in SAML login.")
 
                 url = "/#action=login&saml_error=expired"
                 redirect = werkzeug.utils.redirect(url, 303)
