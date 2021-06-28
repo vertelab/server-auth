@@ -2,22 +2,21 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import functools
-import logging
-
 import json as simplejson
+import logging
 import werkzeug.utils
+from odoo.addons.web.controllers.main import Home
+from odoo.addons.web.controllers.main import ensure_db
+from odoo.addons.web.controllers.main import login_and_redirect
+from odoo.addons.web.controllers.main import set_cookie_and_redirect
+from odoo.http import request
 
 import odoo
 from odoo import api, _, http, SUPERUSER_ID
-from odoo.http import request
 from odoo import registry as registry_get
-from odoo.addons.web.controllers.main import set_cookie_and_redirect
-from odoo.addons.web.controllers.main import ensure_db
-from odoo.addons.web.controllers.main import login_and_redirect
-from odoo.addons.web.controllers.main import Home
-
 
 _logger = logging.getLogger(__name__)
+
 
 # ----------------------------------------------------------
 # helpers
@@ -39,6 +38,7 @@ def fragment_to_query_string(func):
                 window.location = r;
             </script></head><body></body></html>"""
         return func(self, req, **kw)
+
     return wrapper
 
 
@@ -65,7 +65,6 @@ class SAMLLogin(Home):
             request.session.uid and
             request.params.get('redirect')
         ):
-
             # Redirect if already logged in and redirect param is present
             return http.redirect_with_hash(request.params.get('redirect'))
 
@@ -129,7 +128,7 @@ class AuthSAMLController(http.Controller):
         state = self.get_state(provider_id)
 
         try:
-            Provider = request.env['auth.saml.provider'].sudo() 
+            Provider = request.env['auth.saml.provider'].sudo()
             provider = Provider.browse(provider_id)
             auth_request, request_id = provider._get_auth_request(state)
             request.session['saml_request_id'] = request_id
@@ -150,7 +149,7 @@ class AuthSAMLController(http.Controller):
         _logger.debug('/auth_saml/signin: %s' % kw)
         if kw.get('RelayState') is None:
             # here we are in front of a client that went through
-            
+
             # some routes that "lost" its relaystate... this can happen
             # if the client visited his IDP and successfully logged in
             # then the IDP gave him a portal with his available applications
@@ -205,7 +204,7 @@ class AuthSAMLController(http.Controller):
                 url = "/#action=login&saml_error=access-denied"
 
         return set_cookie_and_redirect(url)
-    
+
     # TODO: Might be fun to implement. Not sure exactly how it's supposed to be used.
     # Do we trigger, or does the IDP trigger?
     # ~ @http.route('/auth_saml/signout', type='http', auth="none")
@@ -214,7 +213,7 @@ class AuthSAMLController(http.Controller):
         # ~ dscb = lambda: request.session.logout(keep_db=True)
         # ~ url = auth.process_slo(request_id=request_id, delete_session_cb=dscb)
         # ~ if url is None:
-            # ~ url = redirect
+        # ~ url = redirect
         # ~ errors = auth.get_errors()
         # ~ # TODO: Handle errors and stuff.
         # ~ return werkzeug.utils.redirect(url, 303)

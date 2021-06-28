@@ -2,16 +2,17 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import json
+import logging
+from odoo.exceptions import AccessDenied
+from odoo.tools import safe_eval as eval
 from urllib.parse import urlparse
-from onelogin.saml2.settings import OneLogin_Saml2_Settings
-from onelogin.saml2.auth import OneLogin_Saml2_Auth
 
 from odoo import api, fields, models
-from odoo.tools import safe_eval as eval
-from odoo.exceptions import AccessDenied
 
-import logging
+# from onelogin.saml2.settings import OneLogin_Saml2_Settings
+# from onelogin.saml2.auth import OneLogin_Saml2_Auth
 _logger = logging.getLogger(__name__)
+
 
 class AuthSamlProvider(models.Model):
     """Configuration values of a SAML2 provider"""
@@ -23,7 +24,8 @@ class AuthSamlProvider(models.Model):
     name = fields.Char('Provider name', required=True, index=True)
     settings = fields.Text(
         string='SAML Settings',
-        help="Settings for the SAML connection. See the OneLogin_Saml2_Settings class of Onelogin's SAML module (https://github.com/onelogin/python3-saml)",
+        help="Settings for the SAML connection. See the OneLogin_Saml2_Settings class of Onelogin's SAML "
+             "module (https://github.com/onelogin/python3-saml)",
         default="""{
     "strict": True,
     "debug": True,
@@ -73,8 +75,6 @@ class AuthSamlProvider(models.Model):
         default=False,
     )
 
-
-
     @api.model
     def _default_sp_metadata(self):
         template = """{{
@@ -83,14 +83,14 @@ class AuthSamlProvider(models.Model):
         "url": "{base_url}/auth_saml/signin",
         "binding": "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"
     }},
-    
+
     "NameIDFormat": "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified",
     "x509cert": "",
 }}"""
-        #"singleLogoutService": {
+        # "singleLogoutService": {
         #    "url": "{base_url}/auth_saml/signout",
         #    "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
-        #},
+        # },
         return template.format(base_url=self.env['ir.config_parameter'].get_param('web.base.url'))
 
     @api.multi
@@ -132,7 +132,7 @@ class AuthSamlProvider(models.Model):
             'lowercase_urlencoding': self.lowercase_urlencoding,
             'post_data': post.copy(),
         }
-    
+
     @api.multi
     def _get_onelogin_server(self, request=None, post=None):
         self.ensure_one()
@@ -141,7 +141,7 @@ class AuthSamlProvider(models.Model):
         req = request and self._prepare_onelogin_request(request, post)
         _logger.debug('req: %s settings: %s' % (req, settings))
         return OneLogin_Saml2_Auth(req, settings)
-    
+
     @api.multi
     def _get_auth_request(self, state):
         """build an authentication request and give it back to our client
@@ -151,14 +151,15 @@ class AuthSamlProvider(models.Model):
         # return_to is sent as RelayState. Certain providers insist on using it as the return URL
         # even though it's not supported by the standard. We just want our state returned to us.
         return server.login(return_to=json.dumps(state)), server.get_last_request_id()
-    
+
     @api.multi
     def authenticate(self, request, post):
         server = self._get_onelogin_server(request, post)
         request_id = request.session.get('saml_request_id')
         server.process_response(request_id=request_id)
         errors = server.get_errors()
-        _logger.debug('SAML attributes: %s SAML errors: %s request_id: %s' % (server.get_attributes(), errors, request_id))
+        _logger.debug(
+            'SAML attributes: %s SAML errors: %s request_id: %s' % (server.get_attributes(), errors, request_id))
         if not server.is_authenticated():
             _logger.debug("SAML authentication invalid.")
             raise AccessDenied("SAML authentication invalid.")
@@ -172,7 +173,7 @@ class AuthSamlProvider(models.Model):
             return user.get_saml_data(self, server)
         _logger.debug("SAML errors: %s" % ', '.join(errors))
         raise AccessDenied("SAML errors.")
-    
+
     @api.multi
     def get_saml_user(self, server):
         if self.matching_attribute == 'subject.nameId':
@@ -184,4 +185,3 @@ class AuthSamlProvider(models.Model):
             uid = uid[0]
         _logger.debug(uid)
         return self.env['res.users'].sudo().search([('saml_provider_id', '=', self.id), ('saml_uid', '=', uid)])
-

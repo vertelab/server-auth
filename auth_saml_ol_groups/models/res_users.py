@@ -2,10 +2,12 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import logging
+from odoo.exceptions import AccessDenied
 
 from odoo import api, models
-from odoo.exceptions import AccessDenied
+
 _logger = logging.getLogger(__name__)
+
 
 class ResUser(models.Model):
     """Add SAML login capabilities to Odoo users.

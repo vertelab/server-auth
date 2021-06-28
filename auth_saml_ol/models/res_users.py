@@ -3,11 +3,11 @@
 
 import logging
 import passlib
-
-from odoo.http import request
-from odoo import api, fields, models, _, SUPERUSER_ID, tools
 from odoo.exceptions import ValidationError, AccessDenied
+from odoo.http import request
 from odoo.tools import config
+
+from odoo import api, fields, models, _, SUPERUSER_ID, tools
 
 _logger = logging.getLogger(__name__)
 
@@ -35,8 +35,7 @@ class ResUser(models.Model):
         if not self._allow_saml_and_password():
             # Super admin is the only user we allow to have a local password
             # in the database
-            if (self.password and self.saml_uid and
-                    self.id is not SUPERUSER_ID):
+            if (self.password and self.saml_uid and self.id is not SUPERUSER_ID):
                 raise ValidationError(_("This database disallows users to "
                                         "have both passwords and SAML IDs. "
                                         "Errors for login %s") % (self.login))
@@ -68,7 +67,7 @@ class ResUser(models.Model):
         else:
             # Regular login
             super(ResUser, self)._check_credentials(password)
-    
+
     @api.multi
     def _check_saml_credentials(self, credentials):
         timestamp = credentials.get('timestamp')
@@ -89,7 +88,7 @@ class ResUser(models.Model):
             return
         to_remove_password = self.filtered(
             lambda rec: rec.id != SUPERUSER_ID and rec.saml_uid and
-            not (rec.password or rec.password_crypt)
+                        not (rec.password or rec.password_crypt)
         )
         to_remove_password.write({
             'password': False,

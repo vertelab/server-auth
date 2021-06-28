@@ -18,10 +18,12 @@
 #
 ##############################################################################
 
+import logging
+
 from odoo import models, api, fields, _
 
-import logging
 _logger = logging.getLogger(__name__)
+
 
 class AuthSamlProvider(models.Model):
     _inherit = 'auth.saml.provider'
@@ -37,7 +39,7 @@ class AuthSamlProvider(models.Model):
         if not user and self.create_user:
             user = self._create_saml_user(server)
         return user
-    
+
     @api.multi
     def _get_saml_user_values(self, server):
         """ Get the attributes for a new SAML user.
@@ -80,5 +82,3 @@ class AuthSamlProvider(models.Model):
         user = template_user.with_context(no_reset_password=True).copy(values)
         self.env.cr.commit()
         return user
-
-

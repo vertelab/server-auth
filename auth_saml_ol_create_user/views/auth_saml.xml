@@ -7,8 +7,9 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='matching_attribute']" position="after">
                 <field name="create_user"/>
-                <field name="name_attribute" attrs="{'required': [('create_user', '=', True)], 'invisible': [('create_user', '!=', True)]}" />
-            </xpath>    
+                <field name="name_attribute"
+                       attrs="{'required': [('create_user', '=', True)], 'invisible': [('create_user', '!=', True)]}"/>
+            </xpath>
         </field>
     </record>
 </odoo>
