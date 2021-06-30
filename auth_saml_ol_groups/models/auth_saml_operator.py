@@ -7,6 +7,7 @@ class AuthSamlProviderOperator(models.AbstractModel):
     """Define operators for group mappings"""
 
     _name = "auth.saml.provider.operator"
+    _description = "Auth SAML Provider Operator"
 
     @api.model
     def operators(self):

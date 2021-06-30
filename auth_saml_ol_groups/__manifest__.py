@@ -3,7 +3,6 @@
 
 {
     'name': "Auth SAML Groups",
-
     'summary': """
         This module extends the functionality of Auth SAML
         to support the mapping between SAML groups and odoo groups.""",
@@ -15,7 +14,6 @@
     'category': 'Tools',
     'version': '12.0.1.0.0',
     'depends': [
-        'base',
         'auth_saml_ol'
     ],
     'data': [

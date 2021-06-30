@@ -26,8 +26,8 @@
         <field name="model">auth.saml.provider</field>
         <field name="arch" type="xml">
             <tree string="arch">
-                <field name="name" />
-                <field name="active" />
+                <field name="name"/>
+                <field name="active"/>
             </tree>
         </field>
     </record>
@@ -46,17 +46,17 @@
                 </div>
                 <sheet>
                     <group>
-                        <field name="name" />
-                        <field name="css_class" />
-                        <field name="debug" />
-                        <field name="lowercase_urlencoding" />
+                        <field name="name"/>
+                        <field name="css_class"/>
+                        <field name="debug"/>
+                        <field name="lowercase_urlencoding"/>
                     </group>
                     <group>
-                        <field name="matching_attribute" />
-                        <field name="settings" />
-                        <field name="idp_metadata" />
-                        <field name="sp_metadata" />
-                        <field name="sp_pkey" />
+                        <field name="matching_attribute"/>
+                        <field name="settings"/>
+                        <field name="idp_metadata"/>
+                        <field name="sp_metadata"/>
+                        <field name="sp_pkey"/>
                     </group>
                 </sheet>
             </form>
@@ -73,7 +73,7 @@
     </record>
 
     <menuitem id="menu_saml_providers" name="SAML Providers"
-        parent="base.menu_users" sequence="30" action="action_saml_provider"
-        groups="base.group_no_one" />
+              parent="base.menu_users" sequence="30" action="action_saml_provider"
+              groups="base.group_no_one"/>
 
 </odoo>
