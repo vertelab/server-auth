@@ -9,8 +9,8 @@ from urllib.parse import urlparse
 
 from odoo import api, fields, models
 
-# from onelogin.saml2.settings import OneLogin_Saml2_Settings
-# from onelogin.saml2.auth import OneLogin_Saml2_Auth
+from onelogin.saml2.settings import OneLogin_Saml2_Settings
+from onelogin.saml2.auth import OneLogin_Saml2_Auth
 _logger = logging.getLogger(__name__)
 
 
