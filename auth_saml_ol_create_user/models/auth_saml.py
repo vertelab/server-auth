@@ -31,14 +31,12 @@ class AuthSamlProvider(models.Model):
         default='subject.nameId'
     )
 
-    @api.multi
     def get_saml_user(self, server):
         user = super(AuthSamlProvider, self).get_saml_user(server)
         if not user and self.create_user:
             user = self._create_saml_user(server)
         return user
-    
-    @api.multi
+
     def _get_saml_user_values(self, server):
         """ Get the attributes for a new SAML user.
         """
@@ -64,7 +62,6 @@ class AuthSamlProvider(models.Model):
         }
         return values
 
-    @api.multi
     def _create_saml_user(self, server):
         """ Create a new SAML user.
         """

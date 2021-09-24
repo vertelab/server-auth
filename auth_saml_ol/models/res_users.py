@@ -45,7 +45,6 @@ class ResUser(models.Model):
                          'unique(saml_provider_id, saml_uid)',
                          'SAML UID must be unique per provider')]
 
-    @api.multi
     def get_saml_data(self, provider, server):
         attributes = server.get_attributes()
         nameId = server.get_nameid()
@@ -68,8 +67,7 @@ class ResUser(models.Model):
         else:
             # Regular login
             super(ResUser, self)._check_credentials(password)
-    
-    @api.multi
+
     def _check_saml_credentials(self, credentials):
         timestamp = credentials.get('timestamp')
         user_id = credentials.get('user_id')
@@ -82,7 +80,6 @@ class ResUser(models.Model):
             raise AccessDenied("SAML authentication user missmatch.")
 
     # TODO: Is there any point to this? Just check when authenticating...
-    @api.multi
     def _autoremove_password_if_saml(self):
         """Helper to remove password if it is forbidden for SAML users."""
         if self._allow_saml_and_password():
@@ -96,7 +93,6 @@ class ResUser(models.Model):
             'password_crypt': False,
         })
 
-    @api.multi
     def write(self, vals):
         result = super().write(vals)
         self._autoremove_password_if_saml()

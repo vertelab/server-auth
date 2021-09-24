@@ -68,7 +68,6 @@
     <record model="ir.actions.act_window" id="action_saml_provider">
         <field name="name">Providers</field>
         <field name="res_model">auth.saml.provider</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
 

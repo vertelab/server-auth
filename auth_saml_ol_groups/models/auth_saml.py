@@ -27,7 +27,6 @@ class AuthSamlProvider(models.Model):
         ),
     )
 
-    @api.multi
     def _get_user_groups(self, user, server):
         groups = []
         to_remove = set()

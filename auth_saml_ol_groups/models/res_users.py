@@ -13,7 +13,6 @@ class ResUser(models.Model):
 
     _inherit = 'res.users'
 
-    @api.multi
     def get_saml_data(self, provider, server):
         self.write({
             'groups_id': provider._get_user_groups(self, server),
