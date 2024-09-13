@@ -1,0 +1,42 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* auth_signup_verify_email
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0-20231205\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-13 09:43+0000\n"
+"PO-Revision-Date: 2024-09-13 11:50+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: sv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"X-Generator: Poedit 3.0.1\n"
+
+#. module: auth_signup_verify_email
+#: code:addons/auth_signup_verify_email/controllers/main.py:0
+#, python-format
+msgid "Another user is already registered using this email address."
+msgstr "Kontrollera er e-post för kontoinformation."
+
+#. module: auth_signup_verify_email
+#: code:addons/auth_signup_verify_email/controllers/main.py:0
+#, python-format
+msgid "Check your email to activate your account!"
+msgstr "Kontrollera er e-post för kontoinformation."
+
+#. module: auth_signup_verify_email
+#: code:addons/auth_signup_verify_email/controllers/main.py:0
+#, python-format
+msgid "Something went wrong, please try again later or contact us."
+msgstr "Något gick fel, vänligen försök igen eller kontakta oss."
+
+#. module: auth_signup_verify_email
+#: code:addons/auth_signup_verify_email/controllers/main.py:0
+#, python-format
+msgid "That does not seem to be an email address."
+msgstr "Detta verkar ej vara en e-post adress."
